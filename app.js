@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
 app.use('/', require('./routes/home'));
+app.use('/main', require('./routes/posts')); // 1
 
 app.listen(3000, () => {
     console.log('Connected ! https://localhost:3000');
