@@ -1,6 +1,7 @@
 const express  = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const { isLoggedin } = require('../util');
 const util = require('../util');
 
 router.get('/', (req, res) => {
@@ -13,13 +14,13 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/create', (req, res) =>{
+router.get('/create', util.isLoggedin, (req, res) =>{
     var post = req.flash('post')[0] || {};
     var errors = req.flash('errors')[0] || {};
     res.render('main/create', { post:post, errors:errors });
 });
   
-router.post('/', (req, res) => {
+router.post('/', util.isLoggedin, (req, res) => {
     req.body.author = req.user._id;
     Post.create(req.body, (err, post) => {
         if(err){
@@ -31,16 +32,16 @@ router.post('/', (req, res) => {
     });
   });
   
-router.get('/:id', function(req, res){
+router.get('/:id', (req, res) => {
     Post.findOne({_id:req.params.id})
         .populate('author')             
-        .exec(function(err, post){     
+        .exec((err, post) => {     
             if(err) return res.json(err);
             res.render('main/show', {post:post});
         });
 });
 
-router.get('/:id/edit', (req, res) => {
+router.get('/:id/edit', util.isLoggedin, checkPermission, (req, res) => {
     var post = req.flash('post')[0];
     var errors = req.flash('errors')[0] || {};
 
@@ -57,7 +58,7 @@ router.get('/:id/edit', (req, res) => {
     }
 });
   
-router.put('/:id', (req, res) => {
+router.put('/:id', util.isLoggedin, checkPermission, (req, res) => {
     req.body.updatedAt = Date.now();
     Post.findOneAndUpdate({_id:req.params.id}, req.body, {runValidators:true}, (err, post) => {
         if(err){
@@ -69,7 +70,7 @@ router.put('/:id', (req, res) => {
     });
 });
   
-router.delete('/:id', (req, res) => {
+router.delete('/:id', util.isLoggedin, checkPermission, (req, res) => {
     Post.deleteOne({_id:req.params.id}, (err) =>{
         if(err) return res.json(err);
         res.redirect('/main');
@@ -77,3 +78,13 @@ router.delete('/:id', (req, res) => {
 })
 
 module.exports = router;
+
+function checkPermission (req, res, next){
+    Post.findOne({_id:req.params.id}, function(err, post){
+        if(err) return res.json(err);
+        if(post.author != req.user.id) return util.noPermission(req, res);
+  
+        next();
+    });
+}
+  
