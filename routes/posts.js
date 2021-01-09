@@ -4,15 +4,31 @@ const Post = require('../models/Post');
 const { isLoggedin } = require('../util');
 const util = require('../util');
 
-router.get('/', (req, res) => {
-    Post.find({})    
-    .populate('author')               
-    .sort('-createdAt')             
-    .exec((err, posts) => {     
-        if(err) return res.json(err);
-        res.render('main/index', {posts:posts});
+router.get('/', async function(req, res){
+    var page = Math.max(1, parseInt(req.query.page));
+    var limit = Math.max(1, parseInt(req.query.limit));
+    page = !isNaN(page)?page:1;
+    limit = !isNaN(limit)?limit:10;
+  
+    var skip = (page-1)*limit;
+    var count = await Post.countDocuments({});
+    var maxPage = Math.ceil(count/limit);
+    var posts = await Post.find({})
+      .populate('author')
+      .sort('-createdAt')
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  
+    res.render('main/index', {
+      posts:posts,
+      currentPage:page,
+      maxPage:maxPage,
+      limit:limit
     });
-});
+  });
+  
+  
 
 router.get('/create', util.isLoggedin, (req, res) =>{
     var post = req.flash('post')[0] || {};
@@ -75,7 +91,8 @@ router.delete('/:id', util.isLoggedin, checkPermission, (req, res) => {
         if(err) return res.json(err);
         res.redirect('/main');
     })
-})
+});
+
 
 module.exports = router;
 
