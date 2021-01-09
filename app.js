@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongooseConnect = require('./models/mongoose');
+const passport = require('./config/passport');
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -18,7 +19,14 @@ app.use(session({
     resave:true, 
     saveUninitialized:true
 })); 
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.use((req,res,next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.currentUser = req.user;
+  next();
+});
 
 app.use('/', require('./routes/home'));
 app.use('/main', require('./routes/posts'));
