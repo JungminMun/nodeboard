@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const util = require('../util');
 
 router.get('/', (req, res) => {
     User.find({})
@@ -25,12 +26,13 @@ router.post('/', (req, res) => {
     User.create(req.body, (err, user) => {
         if(err){
             req.flash('user', req.body);
-            req.flash('errors', parseError(err));
-            return res.redirect('/users/create');
+            req.flash('errors', util.parseError(err)); // 1
+            return res.redirect('/users/new');
         }
         res.redirect('/users');
     });
 });
+  
 
 router.get('/:username', (req, res) => {
     var user = req.flash('user')[0];
@@ -59,31 +61,24 @@ router.get('/:username/edit', (req, res) => {
     });
 });
 
-router.put('/:username', (req, res, next) => {
-    User.findOne({username:req.params.username}) 
+router.put('/:username', function(req, res, next){
+    User.findOne({username:req.params.username})
         .select('password')
-        .exec((err, user) => {
+        .exec(function(err, user){
             if(err){
                 return res.json(err);
             }
-
-            user.originalPassword = user.password;
-            user.password = req.body.newPassword? req.body.newPassword : user.password;
-
-            for(var p in req.body){
-                user[p] = req.body[p];
-            }
-
-            user.save((err, user) => {
+            user.save(function(err, user){
                 if(err){
                     req.flash('user', req.body);
-                    req.flash('errors', parseError(err));
-                    return res.redirect('/users/'+req.params.username+'/edit');
-                }         
+                    req.flash('errors', util.parseError(err));
+                    return res.redirect('/users/'+req.params.username+'/edit'); // 1
+                }
                 res.redirect('/users/'+user.username);
             });
         });
 });
+  
 
 router.delete('/:username', (req, res) =>{
     User.deleteOne({username:req.params.username}, (err) => {
