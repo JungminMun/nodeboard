@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('../Additional/head') %>
+</head>
+<body>
+    <%- include('../Additional/nav') %>
+
+    <div class="container mb-3">
+        <div class="card">
+            <h5 class="card-header p-2"><%= post.title %></h5>
+            <div class="row"> 
+                <div class="col-md-7 col-lg-8 col-xl-9 order-sm-2 order-md-1"> 
+                    <div class="post-body p-2"><%= post.body %></div>
+                </div>
+                <div class="col-md-5 col-lg-4 col-xl-3 order-sm-1 order-md-2"> 
+                    <div class="post-info card m-2 p-2"> 
+                        <div>
+                            <span>Created</span> : <span data-date-time="<%= post.createdAt %>"></span>
+                        </div> 
+                        <% if(post.updatedAt) { %>
+                            <div>
+                                <span>Updated</span> : <span data-date-time="<%= post.updatedAt %>"></span>
+                            </div> 
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <a class="btn btn-primary" href="/main/<%= post._id %>/edit">Edit</a> 
+            <form action="/main/<%= post._id %>?_method=delete" method="post" class="d-inline">
+                <a class="btn btn-danger" href="javascript:void(0)" onclick="confirm('정말로 삭제를 할까요?')?this.parentElement.submit():null;">Delete</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
