@@ -5,9 +5,6 @@ const router = express.Router();
 router.get('/', (req, res) => {
     res.render('main/welcome');
 });
-router.get('/about', (req, res) => {
-    res.render('main/about');
-});
 
 router.get('/login', (req,res) => {
     var username = req.flash('username')[0];
