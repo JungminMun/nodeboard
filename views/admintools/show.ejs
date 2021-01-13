@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('../Additional/head') %>
+</head>
+<body>
+    <%- include('../Additional/nav') %>
+
+    <div class="container mb-3">
+        <h2 class="mb-3">Board</h2>
+        <table class="board-table table table-sm border-bottom">
+            <tbody>
+                <% if(users == null){ %>
+                    <tr>
+                        <td colspan=100> There is no data to show :( </td>
+                    </tr>
+                <% } %>
+                <% users.forEach(function(user) { %>
+                    <%= user.username %>
+                <% }) %>
+            </tbody>
+        </table>
+        
+    </div>
+    </div>
+</body>
+</html>
