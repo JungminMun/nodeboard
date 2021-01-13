@@ -18,10 +18,22 @@
               <input class="form-control" type="text" id="name" name="name" value="<%= user.name %>">
             </div>
           </div>
+          <% if(user.email) { %>
           <div class="form-group row">
             <label for="email" class="col-sm-3 col-form-label">Email</label>
             <div class="col-sm-9">
               <input class="form-control" type="text" id="email" name="email" value="<%= user.email %>">
+            </div>
+          </div>              
+          <% }%>
+          <div class="form-group row">
+            <label for="email" class="col-sm-3 col-form-label">Role</label>
+            <div class="col-sm-9">
+              <% if(user.isAdmin) { %>
+              <input class="form-control" type="text" id="isAdmin" name="isAdmin" value="Admin">
+              <% } else { %>
+              <input class="form-control" type="text" id="isAdmin" name="isAdmin" value="User">
+              <% } %>
             </div>
           </div>
         </fieldset>
