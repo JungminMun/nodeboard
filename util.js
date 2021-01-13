@@ -33,5 +33,4 @@ util.noPermission = function(req, res){
   res.redirect('/login');
 }
 
-
 module.exports = util;
