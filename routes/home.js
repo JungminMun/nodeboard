@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('../config/passport');
+const util = require('../util');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -15,7 +16,7 @@ router.get('/login', (req,res) => {
     });
 });
 
-router.post('/login', (req,res,next) => {
+router.post('/login',  (req,res,next) => {
     var errors = {};
     var isValid = true;
 
