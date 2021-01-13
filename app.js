@@ -31,6 +31,7 @@ app.use((req,res,next) => {
 app.use('/', require('./routes/home'));
 app.use('/main', require('./routes/posts'));
 app.use('/users', require('./routes/users'));
+app.use('/admintools', require('./routes/admin'));
 
 app.listen(3000, () => {
     console.log('Connected ! https://localhost:3000');
