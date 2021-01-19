@@ -1,7 +1,6 @@
 const express  = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
-const { isLoggedin } = require('../util');
 const util = require('../util');
 
 router.get('/', async function(req, res){
@@ -86,12 +85,13 @@ router.put('/:id', util.isLoggedin, checkPermission, (req, res) => {
     });
 });
   
-router.delete('/:id', util.isLoggedin, checkPermission, (req, res) => {
-    Post.deleteOne({_id:req.params.id}, (err) =>{
-        if(err) return res.json(err);
-        res.redirect('/main');
-    })
-});
+router.delete('/:id', util.isLoggedin, checkPermission, function(req, res){
+    Post.deleteOne({_id:req.params.id}, function(err){
+      if(err) return res.json(err);
+      res.redirect('/main');
+    });
+  });
+    
 
 
 module.exports = router;
