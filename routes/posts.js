@@ -56,23 +56,21 @@ router.get('/:id', (req, res) => {
         });
 });
 
-router.get('/:id/edit', util.isLoggedin, checkPermission, (req, res) => {
+router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
     var post = req.flash('post')[0];
     var errors = req.flash('errors')[0] || {};
-
     if(!post){
-        Post.findOne({_id:req.params.id}, (err, post) => {
-            if(err){
-                return res.json(err);
-            }
-            res.render('main/edit', { post:post, errors:errors });
+      Post.findOne({_id:req.params.id}, function(err, post){
+          if(err) return res.json(err);
+          res.render('main/edit', { post:post, errors:errors });
         });
-    } else {
-        post._id = req.params.id;
-        res.render('main/edit', { post:post, errors:errors });
     }
-});
-  
+    else {
+      post._id = req.params.id;
+      res.render('main/edit', { post:post, errors:errors });
+    }
+  });
+    
 router.put('/:id', util.isLoggedin, checkPermission, (req, res) => {
     req.body.updatedAt = Date.now();
     Post.findOneAndUpdate({_id:req.params.id}, req.body, {runValidators:true}, (err, post) => {
