@@ -65,6 +65,7 @@ router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
     if(!post){
         Post.findOne({_id:req.params.id}, function(err, post){
             if(err) return res.json(err);
+            
             res.render('main/edit', { post:post, errors:errors });
         });
     }
@@ -77,7 +78,7 @@ router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
 // 
 router.put('/:id', util.isLoggedin, checkPermission, (req, res) => {
     req.body.updatedAt = Date.now();
-    
+
     Post.findOneAndUpdate({_id:req.params.id}, req.body, {runValidators:true}, (err, post) => {
         if(err){
             req.flash('post', req.body);
