@@ -32,6 +32,6 @@ app.use('/', require('./routes/home'));
 app.use('/main', require('./routes/posts'));
 app.use('/users', require('./routes/users'));
 
-app.listen(3000, () => {
-    console.log('Connected ! http://localhost:3000');
+app.listen(1208, () => {
+    console.log('Connected ! http://localhost:1208');
 })

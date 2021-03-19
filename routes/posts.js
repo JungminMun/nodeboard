@@ -75,7 +75,6 @@ router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
     }
 });
     
-// 
 router.put('/:id', util.isLoggedin, checkPermission, (req, res) => {
     req.body.updatedAt = Date.now();
 
