@@ -24,6 +24,7 @@ router.post('/login',  (req,res,next) => {
         isValid = false;
         errors.username = 'Username is required!';
     }
+    
     if(!req.body.password){
         isValid = false;
         errors.password = 'Password is required!';

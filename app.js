@@ -23,9 +23,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req,res,next) => {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  res.locals.currentUser = req.user;
-  next();
+    res.locals.isAuthenticated = req.isAuthenticated();
+    res.locals.currentUser = req.user;
+    next();
 });
 
 app.use('/', require('./routes/home'));
@@ -33,5 +33,5 @@ app.use('/main', require('./routes/posts'));
 app.use('/users', require('./routes/users'));
 
 app.listen(3000, () => {
-    console.log('Connected ! https://localhost:3000');
+    console.log('Connected ! http://localhost:3000');
 })
